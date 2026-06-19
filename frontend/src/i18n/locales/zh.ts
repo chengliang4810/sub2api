@@ -2,108 +2,103 @@ export default {
   // Home Page
   home: {
     viewOnGithub: '在 GitHub 上查看',
-    viewDocs: '查看文档',
-    docs: '文档',
+    viewDocs: '查看资料',
+    docs: '资料',
     switchToLight: '切换到浅色模式',
     switchToDark: '切换到深色模式',
-    dashboard: '控制台',
-    login: '登录',
-    getStarted: '立即开始',
-    goToDashboard: '进入控制台',
-    // 新增：面向用户的价值主张
-    heroSubtitle: '一个密钥，畅用多个 AI 模型',
-    heroDescription: '无需管理多个订阅账号，一站式接入 Claude、GPT、Gemini 等主流 AI 服务',
+    dashboard: '员工入口',
+    login: '员工入口',
+    getStarted: '查看资料',
+    goToDashboard: '员工入口',
+    heroSubtitle: '团队文档、流程说明与协作资料入口',
+    heroDescription: '用于整理公开说明、制度流程、项目资料和常用链接，方便成员查阅最新信息。',
     tags: {
-      subscriptionToApi: '订阅转 API',
-      stickySession: '会话保持',
-      realtimeBilling: '按量计费'
+      archive: '资料归档',
+      processIndex: '流程索引',
+      updates: '更新记录'
     },
-    // 用户痛点区块
-    painPoints: {
-      title: '你是否也遇到这些问题？',
+    resourceScope: {
+      title: '资料维护范围',
       items: {
-        expensive: {
-          title: '订阅费用高',
-          desc: '每个 AI 服务都要单独订阅，每月支出越来越多'
+        policy: {
+          title: '制度说明',
+          desc: '沉淀团队日常制度、通知和公开说明'
         },
-        complex: {
-          title: '多账号难管理',
-          desc: '不同平台的账号、密钥分散各处，管理起来很麻烦'
+        process: {
+          title: '流程资料',
+          desc: '统一整理跨部门协作和交付流程'
         },
-        unstable: {
-          title: '服务不稳定',
-          desc: '单一账号容易触发限制，影响正常使用'
+        project: {
+          title: '项目记录',
+          desc: '归档项目资料、维护记录和交接说明'
         },
-        noControl: {
-          title: '用量无法控制',
-          desc: '不知道钱花在哪了，也无法限制团队成员的使用'
+        common: {
+          title: '常用资源',
+          desc: '集中维护团队常用链接和联系人信息'
         }
       }
     },
-    // 解决方案区块
     solutions: {
-      title: '我们帮你解决',
-      subtitle: '简单三步，开始省心使用 AI'
+      title: '资料中心',
+      subtitle: '按主题维护团队协作资料'
     },
     features: {
-      unifiedGateway: '一键接入',
-      unifiedGatewayDesc: '获取一个 API 密钥，即可调用所有已接入的 AI 模型，无需分别申请。',
-      multiAccount: '稳定可靠',
-      multiAccountDesc: '智能调度多个上游账号，自动切换和负载均衡，告别频繁报错。',
-      balanceQuota: '用多少付多少',
-      balanceQuotaDesc: '按实际使用量计费，支持设置配额上限，团队用量一目了然。'
+      processGuides: '流程手册',
+      processGuidesDesc: '整理日常协作流程、审批说明和交付规范，方便快速查阅。',
+      projectNotes: '项目资料',
+      projectNotesDesc: '归档项目说明、维护记录和协作文档，减少重复沟通。',
+      commonLinks: '常用链接',
+      commonLinksDesc: '集中维护团队常用资源入口，让资料查找更直接。'
     },
-    // 优势对比
     comparison: {
-      title: '为什么选择我们？',
+      title: '资料分类',
       headers: {
-        feature: '对比项',
-        official: '官方订阅',
-        us: '本平台'
+        feature: '分类',
+        official: '范围',
+        us: '维护方式'
       },
       items: {
         pricing: {
-          feature: '付费方式',
-          official: '固定月费，用不完也付',
-          us: '按量付费，用多少付多少'
+          feature: '流程资料',
+          official: '审批、交付、协作',
+          us: '按版本归档'
         },
         models: {
-          feature: '模型选择',
-          official: '单一服务商',
-          us: '多模型随意切换'
+          feature: '项目资料',
+          official: '说明、记录、交接',
+          us: '按项目维护'
         },
         management: {
-          feature: '账号管理',
-          official: '每个服务单独管理',
-          us: '统一密钥，一站管理'
+          feature: '常用资源',
+          official: '链接、联系人、模板',
+          us: '定期校验'
         },
         stability: {
-          feature: '服务稳定性',
-          official: '单账号易触发限制',
-          us: '多账号池，自动切换'
+          feature: '公告记录',
+          official: '通知、变更、安排',
+          us: '按时间同步'
         },
         control: {
-          feature: '用量控制',
-          official: '无法限制',
-          us: '可设配额、查明细'
+          feature: '公开说明',
+          official: '对外资料、说明页',
+          us: '由维护人审核'
         }
       }
     },
     providers: {
-      title: '已支持的 AI 模型',
-      description: '一个 API，多种选择',
-      supported: '已支持',
-      soon: '即将推出',
-      claude: 'Claude',
-      gemini: 'Gemini',
-      antigravity: 'Antigravity',
-      more: '更多'
+      title: '最近更新',
+      description: '同步团队公开资料和维护说明',
+      supported: '已更新',
+      soon: '计划中',
+      resourceIndex: '资料索引',
+      processNotes: '流程说明',
+      contactDetails: '联系人信息',
+      more: '更多记录'
     },
-    // CTA 区块
     cta: {
-      title: '准备好开始了吗？',
-      description: '注册即可获得免费试用额度，体验一站式 AI 服务',
-      button: '免费注册'
+      title: '需要访问内部资料？',
+      description: '请使用员工入口登录后查看授权内容。',
+      button: '员工入口'
     },
     footer: {
       allRightsReserved: '保留所有权利。'

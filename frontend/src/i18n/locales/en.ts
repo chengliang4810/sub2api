@@ -2,108 +2,103 @@ export default {
   // Home Page
   home: {
     viewOnGithub: 'View on GitHub',
-    viewDocs: 'View Documentation',
-    docs: 'Docs',
+    viewDocs: 'View Resources',
+    docs: 'Resources',
     switchToLight: 'Switch to Light Mode',
     switchToDark: 'Switch to Dark Mode',
-    dashboard: 'Dashboard',
-    login: 'Login',
-    getStarted: 'Get Started',
-    goToDashboard: 'Go to Dashboard',
-    // User-focused value proposition
-    heroSubtitle: 'One Key, All AI Models',
-    heroDescription: 'No need to manage multiple subscriptions. Access Claude, GPT, Gemini and more with a single API key',
+    dashboard: 'Staff Entry',
+    login: 'Staff Entry',
+    getStarted: 'View Resources',
+    goToDashboard: 'Staff Entry',
+    heroSubtitle: 'Team documents, process notes, and collaboration resources',
+    heroDescription: 'A shared space for public notes, process references, project materials, and frequently used links.',
     tags: {
-      subscriptionToApi: 'Subscription to API',
-      stickySession: 'Session Persistence',
-      realtimeBilling: 'Pay As You Go'
+      archive: 'Archive',
+      processIndex: 'Process Index',
+      updates: 'Updates'
     },
-    // Pain points section
-    painPoints: {
-      title: 'Sound Familiar?',
+    resourceScope: {
+      title: 'Resource Coverage',
       items: {
-        expensive: {
-          title: 'High Subscription Costs',
-          desc: 'Paying for multiple AI subscriptions that add up every month'
+        policy: {
+          title: 'Policy Notes',
+          desc: 'Shared team policies, notices, and public references'
         },
-        complex: {
-          title: 'Account Chaos',
-          desc: 'Managing scattered accounts and API keys across different platforms'
+        process: {
+          title: 'Process Materials',
+          desc: 'Cross-team collaboration and delivery references'
         },
-        unstable: {
-          title: 'Service Interruptions',
-          desc: 'Single accounts hitting rate limits and disrupting your workflow'
+        project: {
+          title: 'Project Records',
+          desc: 'Project materials, maintenance notes, and handover records'
         },
-        noControl: {
-          title: 'No Usage Control',
-          desc: "Can't track where your money goes or limit team member usage"
+        common: {
+          title: 'Common Resources',
+          desc: 'Frequently used links and contact information'
         }
       }
     },
-    // Solutions section
     solutions: {
-      title: 'We Solve These Problems',
-      subtitle: 'Three simple steps to stress-free AI access'
+      title: 'Resource Center',
+      subtitle: 'Team collaboration materials by topic'
     },
     features: {
-      unifiedGateway: 'One-Click Access',
-      unifiedGatewayDesc: 'Get a single API key to call all connected AI models. No separate applications needed.',
-      multiAccount: 'Always Reliable',
-      multiAccountDesc: 'Smart routing across multiple upstream accounts with automatic failover. Say goodbye to errors.',
-      balanceQuota: 'Pay What You Use',
-      balanceQuotaDesc: 'Usage-based billing with quota limits. Full visibility into team consumption.'
+      processGuides: 'Process Guides',
+      processGuidesDesc: 'Collect routine workflows, approval notes, and delivery conventions in one place.',
+      projectNotes: 'Project Notes',
+      projectNotesDesc: 'Archive project descriptions, maintenance notes, and shared references for team review.',
+      commonLinks: 'Common Links',
+      commonLinksDesc: 'Keep frequently used team resources easy to find and maintain.'
     },
-    // Comparison section
     comparison: {
-      title: 'Why Choose Us?',
+      title: 'Resource Categories',
       headers: {
-        feature: 'Comparison',
-        official: 'Official Subscriptions',
-        us: 'Our Platform'
+        feature: 'Category',
+        official: 'Scope',
+        us: 'Maintenance'
       },
       items: {
         pricing: {
-          feature: 'Pricing',
-          official: 'Fixed monthly fee, pay even if unused',
-          us: 'Pay only for what you use'
+          feature: 'Process Materials',
+          official: 'Approvals, delivery, collaboration',
+          us: 'Versioned archive'
         },
         models: {
-          feature: 'Model Selection',
-          official: 'Single provider only',
-          us: 'Switch between models freely'
+          feature: 'Project Notes',
+          official: 'Briefs, records, handovers',
+          us: 'Maintained by project'
         },
         management: {
-          feature: 'Account Management',
-          official: 'Manage each service separately',
-          us: 'Unified key, one dashboard'
+          feature: 'Common Resources',
+          official: 'Links, contacts, templates',
+          us: 'Periodic review'
         },
         stability: {
-          feature: 'Stability',
-          official: 'Single account rate limits',
-          us: 'Multi-account pool, auto-failover'
+          feature: 'Notice Records',
+          official: 'Notices, changes, schedules',
+          us: 'Time-based updates'
         },
         control: {
-          feature: 'Usage Control',
-          official: 'Not available',
-          us: 'Quotas & detailed analytics'
+          feature: 'Public Notes',
+          official: 'External notes and pages',
+          us: 'Maintainer-reviewed'
         }
       }
     },
     providers: {
-      title: 'Supported AI Models',
-      description: 'One API, Multiple Choices',
-      supported: 'Supported',
-      soon: 'Soon',
-      claude: 'Claude',
-      gemini: 'Gemini',
-      antigravity: 'Antigravity',
-      more: 'More'
+      title: 'Recent Updates',
+      description: 'Shared team resources and maintenance notes',
+      supported: 'Updated',
+      soon: 'Planned',
+      resourceIndex: 'Resource Index',
+      processNotes: 'Process Notes',
+      contactDetails: 'Contact Details',
+      more: 'More Records'
     },
-    // CTA section
     cta: {
-      title: 'Ready to Get Started?',
-      description: 'Sign up now and get free trial credits to experience seamless AI access',
-      button: 'Sign Up Free'
+      title: 'Need internal access?',
+      description: 'Use the staff entry to sign in and view authorized resources.',
+      button: 'Staff Entry'
     },
     footer: {
       allRightsReserved: 'All rights reserved.'

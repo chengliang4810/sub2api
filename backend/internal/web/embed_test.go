@@ -22,17 +22,29 @@ func init() {
 
 func TestInjectSiteTitle(t *testing.T) {
 	t.Run("replaces_title_with_site_name", func(t *testing.T) {
-		html := []byte(`<html><head><title>Sub2API - AI API Gateway</title></head><body></body></html>`)
+		html := []byte(`<html><head><title>Qinglan Knowledge Base</title></head><body></body></html>`)
 		settingsJSON := []byte(`{"site_name":"MyCustomSite"}`)
 
 		result := injectSiteTitle(html, settingsJSON)
 
-		assert.Contains(t, string(result), "<title>MyCustomSite - AI API Gateway</title>")
+		assert.Contains(t, string(result), "<title>MyCustomSite</title>")
+		assert.NotContains(t, string(result), "Qinglan Knowledge Base")
+		assert.NotContains(t, string(result), "AI API Gateway")
+	})
+
+	t.Run("uses_neutral_title_for_builtin_site_name", func(t *testing.T) {
+		html := []byte(`<html><head><title>Qinglan Knowledge Base</title></head><body></body></html>`)
+		settingsJSON := []byte(`{"site_name":"Sub2API"}`)
+
+		result := injectSiteTitle(html, settingsJSON)
+
+		assert.Contains(t, string(result), "<title>Qinglan Knowledge Base</title>")
 		assert.NotContains(t, string(result), "Sub2API")
+		assert.NotContains(t, string(result), "AI API Gateway")
 	})
 
 	t.Run("returns_unchanged_when_site_name_empty", func(t *testing.T) {
-		html := []byte(`<html><head><title>Sub2API - AI API Gateway</title></head><body></body></html>`)
+		html := []byte(`<html><head><title>Qinglan Knowledge Base</title></head><body></body></html>`)
 		settingsJSON := []byte(`{"site_name":""}`)
 
 		result := injectSiteTitle(html, settingsJSON)
@@ -41,7 +53,7 @@ func TestInjectSiteTitle(t *testing.T) {
 	})
 
 	t.Run("returns_unchanged_when_site_name_missing", func(t *testing.T) {
-		html := []byte(`<html><head><title>Sub2API - AI API Gateway</title></head><body></body></html>`)
+		html := []byte(`<html><head><title>Qinglan Knowledge Base</title></head><body></body></html>`)
 		settingsJSON := []byte(`{"other_field":"value"}`)
 
 		result := injectSiteTitle(html, settingsJSON)
@@ -50,7 +62,7 @@ func TestInjectSiteTitle(t *testing.T) {
 	})
 
 	t.Run("returns_unchanged_when_invalid_json", func(t *testing.T) {
-		html := []byte(`<html><head><title>Sub2API - AI API Gateway</title></head><body></body></html>`)
+		html := []byte(`<html><head><title>Qinglan Knowledge Base</title></head><body></body></html>`)
 		settingsJSON := []byte(`{invalid json}`)
 
 		result := injectSiteTitle(html, settingsJSON)
@@ -88,7 +100,8 @@ func TestInjectSiteTitle(t *testing.T) {
 		assert.Contains(t, string(result), `<meta charset="UTF-8">`)
 		assert.Contains(t, string(result), `<script src="app.js"></script>`)
 		assert.Contains(t, string(result), `<div id="app"></div>`)
-		assert.Contains(t, string(result), "<title>TestSite - AI API Gateway</title>")
+		assert.Contains(t, string(result), "<title>TestSite</title>")
+		assert.NotContains(t, string(result), "AI API Gateway")
 	})
 }
 
@@ -149,13 +162,23 @@ func TestNonceHTMLPlaceholder(t *testing.T) {
 
 // mockSettingsProvider implements PublicSettingsProvider for testing
 type mockSettingsProvider struct {
-	settings any
-	err      error
-	called   int
+	settings     any
+	homeSettings any
+	err          error
+	called       int
+	homeCalled   int
 }
 
 func (m *mockSettingsProvider) GetPublicSettingsForInjection(ctx context.Context) (any, error) {
 	m.called++
+	return m.settings, m.err
+}
+
+func (m *mockSettingsProvider) GetPublicHomeSettingsForInjection(ctx context.Context) (any, error) {
+	m.homeCalled++
+	if m.homeSettings != nil {
+		return m.homeSettings, m.err
+	}
 	return m.settings, m.err
 }
 
@@ -232,7 +255,7 @@ func TestFrontendServer_ServeIndexHTML(t *testing.T) {
 		testNonce := "test-nonce-12345"
 		c.Set(middleware.CSPNonceKey, testNonce)
 
-		server.serveIndexHTML(c)
+		server.serveIndexHTML(c, false)
 
 		assert.Equal(t, http.StatusOK, w.Code)
 		assert.Contains(t, w.Header().Get("Content-Type"), "text/html")
@@ -257,7 +280,7 @@ func TestFrontendServer_ServeIndexHTML(t *testing.T) {
 		c1.Request = httptest.NewRequest(http.MethodGet, "/", nil)
 		c1.Set(middleware.CSPNonceKey, "nonce1")
 
-		server.serveIndexHTML(c1)
+		server.serveIndexHTML(c1, false)
 		assert.Equal(t, 1, provider.called)
 
 		// Second request - should use cache
@@ -266,7 +289,7 @@ func TestFrontendServer_ServeIndexHTML(t *testing.T) {
 		c2.Request = httptest.NewRequest(http.MethodGet, "/", nil)
 		c2.Set(middleware.CSPNonceKey, "nonce2")
 
-		server.serveIndexHTML(c2)
+		server.serveIndexHTML(c2, false)
 		// Settings provider should not be called again
 		assert.Equal(t, 1, provider.called)
 
@@ -287,7 +310,7 @@ func TestFrontendServer_ServeIndexHTML(t *testing.T) {
 		c.Request = httptest.NewRequest(http.MethodGet, "/", nil)
 		c.Set(middleware.CSPNonceKey, "nonce123")
 
-		server.serveIndexHTML(c)
+		server.serveIndexHTML(c, false)
 
 		etag := w.Header().Get("ETag")
 		assert.NotEmpty(t, etag)
@@ -341,7 +364,7 @@ func TestFrontendServer_ServeIndexHTML(t *testing.T) {
 		c.Request = httptest.NewRequest(http.MethodGet, "/", nil)
 		c.Set(middleware.CSPNonceKey, "nonce123")
 
-		server.serveIndexHTML(c)
+		server.serveIndexHTML(c, false)
 
 		assert.Equal(t, "no-cache", w.Header().Get("Cache-Control"))
 	})
@@ -362,11 +385,82 @@ func TestFrontendServer_ServeIndexHTML(t *testing.T) {
 		c.Request = httptest.NewRequest(http.MethodGet, "/", nil)
 		c.Set(middleware.CSPNonceKey, "nonce123")
 
-		server.serveIndexHTML(c)
+		server.serveIndexHTML(c, false)
 
 		// Should still return 200 with base HTML
 		assert.Equal(t, http.StatusOK, w.Code)
 		assert.Contains(t, w.Header().Get("Content-Type"), "text/html")
+	})
+}
+
+func TestFrontendServer_HomeRouteInjection(t *testing.T) {
+	t.Run("home_route_uses_sanitized_home_settings", func(t *testing.T) {
+		provider := &mockSettingsProvider{
+			settings: map[string]string{
+				"site_name":     "InternalGateway",
+				"site_subtitle": "AI API Gateway Platform",
+				"doc_url":       "https://github.com/Wei-Shaw/sub2api",
+			},
+			homeSettings: map[string]string{
+				"site_name":     "Qinglan Knowledge Base",
+				"site_subtitle": "Team documents and process notes",
+				"doc_url":       "",
+			},
+		}
+
+		server, err := NewFrontendServer(provider)
+		require.NoError(t, err)
+
+		router := gin.New()
+		router.Use(func(c *gin.Context) {
+			c.Set(middleware.CSPNonceKey, "test-nonce")
+			c.Next()
+		})
+		router.Use(server.Middleware())
+
+		w := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/home", nil)
+		router.ServeHTTP(w, req)
+
+		body := w.Body.String()
+		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Equal(t, 0, provider.called)
+		assert.Equal(t, 1, provider.homeCalled)
+		assert.Contains(t, body, `"site_name":"Qinglan Knowledge Base"`)
+		assert.NotContains(t, body, "InternalGateway")
+		assert.NotContains(t, body, "AI API Gateway")
+		assert.NotContains(t, body, "github.com/Wei-Shaw")
+	})
+
+	t.Run("app_route_uses_full_public_settings", func(t *testing.T) {
+		provider := &mockSettingsProvider{
+			settings: map[string]string{
+				"site_name": "InternalGateway",
+			},
+			homeSettings: map[string]string{
+				"site_name": "Qinglan Knowledge Base",
+			},
+		}
+
+		server, err := NewFrontendServer(provider)
+		require.NoError(t, err)
+
+		router := gin.New()
+		router.Use(func(c *gin.Context) {
+			c.Set(middleware.CSPNonceKey, "test-nonce")
+			c.Next()
+		})
+		router.Use(server.Middleware())
+
+		w := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/dashboard", nil)
+		router.ServeHTTP(w, req)
+
+		body := w.Body.String()
+		assert.Equal(t, http.StatusOK, w.Code)
+		assert.Equal(t, 1, provider.called)
+		assert.Equal(t, 0, provider.homeCalled)
+		assert.Contains(t, body, `"site_name":"InternalGateway"`)
 	})
 }
 
@@ -385,7 +479,7 @@ func TestFrontendServer_InvalidateCache(t *testing.T) {
 		c1.Request = httptest.NewRequest(http.MethodGet, "/", nil)
 		c1.Set(middleware.CSPNonceKey, "nonce1")
 
-		server.serveIndexHTML(c1)
+		server.serveIndexHTML(c1, false)
 		assert.Equal(t, 1, provider.called)
 
 		// Invalidate cache
@@ -400,7 +494,7 @@ func TestFrontendServer_InvalidateCache(t *testing.T) {
 		c2.Request = httptest.NewRequest(http.MethodGet, "/", nil)
 		c2.Set(middleware.CSPNonceKey, "nonce2")
 
-		server.serveIndexHTML(c2)
+		server.serveIndexHTML(c2, false)
 		assert.Equal(t, 2, provider.called)
 	})
 
@@ -759,6 +853,6 @@ func BenchmarkFrontendServerServeIndexHTML(b *testing.B) {
 		c.Request = httptest.NewRequest(http.MethodGet, "/", nil)
 		c.Set(middleware.CSPNonceKey, "test-nonce")
 
-		server.serveIndexHTML(c)
+		server.serveIndexHTML(c, false)
 	}
 }

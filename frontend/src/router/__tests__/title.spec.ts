@@ -15,6 +15,11 @@ describe('resolveDocumentTitle', () => {
     expect(resolveDocumentTitle(undefined, '   ')).toBe('Sub2API')
   })
 
+  it('默认公开首页使用中性知识库标题', () => {
+    expect(resolveDocumentTitle('Home', 'Sub2API', undefined, 'Home')).toBe('Knowledge Base - Qinglan Knowledge Base')
+    expect(resolveDocumentTitle('Home', 'InternalGateway', undefined, 'Home')).toBe('Knowledge Base - Qinglan Knowledge Base')
+  })
+
   it('站点名变更时仅影响后续路由标题计算', () => {
     const before = resolveDocumentTitle('Admin Dashboard', 'Alpha')
     const after = resolveDocumentTitle('Admin Dashboard', 'Beta')

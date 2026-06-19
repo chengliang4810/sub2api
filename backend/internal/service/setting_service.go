@@ -1274,6 +1274,27 @@ func (s *SettingService) GetPublicSettingsForInjection(ctx context.Context) (any
 		return nil, err
 	}
 
+	return s.publicSettingsInjectionPayload(settings), nil
+}
+
+// GetPublicHomeSettingsForInjection returns a sanitized payload for the public
+// home route. It keeps explicit home_content overrides but avoids exposing the
+// real product branding or documentation links in the initial HTML source.
+func (s *SettingService) GetPublicHomeSettingsForInjection(ctx context.Context) (any, error) {
+	settings, err := s.GetPublicSettings(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	payload := s.publicSettingsInjectionPayload(settings)
+	payload.SiteName = "Qinglan Knowledge Base"
+	payload.SiteLogo = ""
+	payload.SiteSubtitle = "Team documents, process notes, and collaboration resources"
+	payload.DocURL = ""
+	return payload, nil
+}
+
+func (s *SettingService) publicSettingsInjectionPayload(settings *PublicSettings) *PublicSettingsInjectionPayload {
 	return &PublicSettingsInjectionPayload{
 		RegistrationEnabled:              settings.RegistrationEnabled,
 		EmailVerifyEnabled:               settings.EmailVerifyEnabled,
@@ -1327,7 +1348,7 @@ func (s *SettingService) GetPublicSettingsForInjection(ctx context.Context) (any
 		AffiliateEnabled:                     settings.AffiliateEnabled,
 		RiskControlEnabled:                   settings.RiskControlEnabled,
 		AllowUserViewErrorRequests:           settings.AllowUserViewErrorRequests,
-	}, nil
+	}
 }
 
 func DefaultWeChatConnectScopesForMode(mode string) string {

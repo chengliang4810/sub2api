@@ -17,6 +17,10 @@ const subscriptionStore = useSubscriptionStore()
 const announcementStore = useAnnouncementStore()
 const adminComplianceStore = useAdminComplianceStore()
 
+function isPublicHomePath(path: string) {
+  return path === '/' || path.replace(/\/+$/, '') === '/home'
+}
+
 /**
  * Update favicon dynamically
  * @param logoUrl - URL of the logo to use as favicon
@@ -120,11 +124,14 @@ onMounted(async () => {
     // If setup endpoint fails, assume normal mode and continue
   }
 
-  // Load public settings into appStore (will be cached for other components)
-  await appStore.fetchPublicSettings()
+  // Load public settings into appStore (will be cached for other components).
+  // The decoy public home uses server-injected sanitized settings only.
+  if (!isPublicHomePath(route.path)) {
+    await appStore.fetchPublicSettings()
+  }
 
   // Re-resolve document title now that siteName is available
-  document.title = resolveDocumentTitle(route.meta.title, appStore.siteName, route.meta.titleKey as string)
+  document.title = resolveDocumentTitle(route.meta.title, appStore.siteName, route.meta.titleKey as string, route.name)
 })
 </script>
 

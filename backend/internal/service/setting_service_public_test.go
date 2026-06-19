@@ -164,3 +164,26 @@ func TestSettingService_GetPublicSettings_FallsBackToConfigForWeChatOAuthCapabil
 	require.False(t, settings.WeChatOAuthMPEnabled)
 	require.False(t, settings.WeChatOAuthMobileEnabled)
 }
+
+func TestSettingService_GetPublicHomeSettingsForInjection_SanitizesBranding(t *testing.T) {
+	svc := NewSettingService(&settingPublicRepoStub{
+		values: map[string]string{
+			SettingKeySiteName:     "InternalGateway",
+			SettingKeySiteLogo:     "/real-logo.png",
+			SettingKeySiteSubtitle: "AI API Gateway Platform",
+			SettingKeyDocURL:       "https://github.com/Wei-Shaw/sub2api",
+			SettingKeyHomeContent:  "<main>Custom staff notice</main>",
+		},
+	}, &config.Config{})
+
+	raw, err := svc.GetPublicHomeSettingsForInjection(context.Background())
+	require.NoError(t, err)
+
+	payload, ok := raw.(*PublicSettingsInjectionPayload)
+	require.True(t, ok)
+	require.Equal(t, "Qinglan Knowledge Base", payload.SiteName)
+	require.Empty(t, payload.SiteLogo)
+	require.Equal(t, "Team documents, process notes, and collaboration resources", payload.SiteSubtitle)
+	require.Empty(t, payload.DocURL)
+	require.Equal(t, "<main>Custom staff notice</main>", payload.HomeContent)
+}
